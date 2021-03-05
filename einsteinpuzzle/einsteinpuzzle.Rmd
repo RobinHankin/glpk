@@ -1,0 +1,157 @@
+---
+title: "Einstein's puzzle"
+author: "Robin KS Hankin"
+date: "04/03/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(magrittr)
+library(ompr)
+library(ompr.roi)
+library(ROI.plugin.glpk)
+library(dplyr)
+library(kableExtra)
+```
+
+## R Markdown
+
+Einstein's puzzle is as follows.
+
+* There are 5 houses in five different colors.
+* In each house lives a person with a different nationality.
+* These five owners drink a certain type of beverage, smoke a certain brand of cigar and keep a certain pet.
+* No owners have the same pet, smoke the same brand of cigar or drink the same beverage.
+
+The question is: Who owns the fish?
+
+Hints
+
+* The Brit lives in the red house
+* The Swede keeps dogs as pets
+* The Dane drinks tea
+* The green house is on the left of the white house
+* The green house's owner drinks coffee
+* The person who smokes Pall Mall rears birds
+* The owner of the yellow house smokes Dunhill
+* The man living in the center house drinks milk
+* The Norwegian lives in the first house
+* The man who smokes blends lives next to the one who keeps cats
+* The man who keeps horses lives next to the man who smokes Dunhill
+* The owner who smokes BlueMaster drinks beer
+* The German smokes Prince
+* The Norwegian lives next to the blue house
+* The man who smokes blend has a neighbor who drinks water
+
+
+```{r}
+colour <- c("red","green","white","yellow","blue")               # 1
+number <- c("one","two","three","four","five")                   # 2
+nationality <- c("Brit","Swede","Dane","Norwegian","German")     # 3
+pet <- c("dogs","birds","cats","horses","fish")                  # 4
+drink <- c("tea","coffee","milk","beer","water")                 # 5
+smoke <- c("Pall Mall","Dunhill","Blends","BlueMaster","Prince") # 6
+
+index <- c(colour=1, number=2, nationality=3,pet=4,drink=5,smoke=6)
+```
+
+
+```{r}
+n  <- 5
+ns <- seq_len(n)
+
+model <- MILPModel() %>%
+  add_variable(x12[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x13[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x14[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x15[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x16[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x23[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x24[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x25[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x26[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x34[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x35[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x36[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x45[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x46[i, j], i = ns, j = ns, type = "binary") %>%
+  add_variable(x56[i, j], i = ns, j = ns, type = "binary") %>%
+
+
+  # No objective:
+  set_objective(0) %>%    # Only one cell can be assigned in a row:
+  add_constraint(sum_expr(x12[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x13[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x14[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x15[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x16[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x23[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x24[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x25[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x26[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x34[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x35[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x36[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x45[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x46[i, j], j = ns) == 1, i = ns) %>%
+  add_constraint(sum_expr(x56[i, j], j = ns) == 1, i = ns) %>%
+
+
+  # Only one cell can be assigned in a column:
+  add_constraint(sum_expr(x12[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x13[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x14[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x15[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x16[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x23[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x24[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x25[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x26[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x34[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x35[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x36[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x45[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x46[i, j], i = ns) == 1, j = ns) %>%
+  add_constraint(sum_expr(x56[i, j], i = ns) == 1, j = ns) %>%
+
+
+add_constraint(x12[i, j] + x13[i, k] <= x23[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x12[i, j] + x14[i, k] <= x24[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x12[i, j] + x15[i, k] <= x15[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x12[i, j] + x16[i, k] <= x26[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+add_constraint(x13[i, j] + x14[i, k] <= x34[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x13[i, j] + x15[i, k] <= x35[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x13[i, j] + x16[i, k] <= x36[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+add_constraint(x14[i, j] + x15[i, k] <= x45[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x14[i, j] + x16[i, k] <= x46[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+add_constraint(x15[i, j] + x16[i, k] <= x56[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+# ==================
+
+add_constraint(x23[i, j] + x24[i, k] <= x34[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x23[i, j] + x25[i, k] <= x35[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x23[i, j] + x26[i, k] <= x36[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+add_constraint(x24[i, j] + x25[i, k] <= x45[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x24[i, j] + x26[i, k] <= x46[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+add_constraint(x25[i, j] + x26[i, k] <= x56[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+# ==================
+
+add_constraint(x34[i, j] + x35[i, k] <= x45[j, k] + 1, i = ns, j = ns, k = ns) %>%
+add_constraint(x34[i, j] + x36[i, k] <= x46[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+add_constraint(x35[i, j] + x36[i, k] <= x56[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+# ==================
+
+add_constraint(x45[i, j] + x46[i, k] <= x56[j, k] + 1, i = ns, j = ns, k = ns) %>%
+
+
+
+
