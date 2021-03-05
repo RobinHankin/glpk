@@ -1,0 +1,6 @@
+
+for {i in 1..26}
+{  
+      printf " %d", sum{j in 1..26} j*x[i,j]; 
+}
+printf(" \n");

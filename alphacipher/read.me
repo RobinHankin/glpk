@@ -1,0 +1,50 @@
+from the "puzzle compendium", page 74
+
+Source the file modmaker.R in R, and this will create a file called
+ashley.mod.  File modmaker.R has extra documentation, and there are
+some comments in header.txt as well.
+
+Process ashley.mod using:
+
+glpsol --minisat -m ashley.mod
+
+(takes about a minute to run).  This produces a string of numbers
+which are printed to the screen. 
+
+The end of the output looks like this:
+
+
+Solving CNF-SAT problem...
+Instance has 17626 variables, 133963 clauses, and 529066 literals
+==================================[MINISAT]===================================
+| Conflicts |     ORIGINAL     |              LEARNT              | Progress |
+|           | Clauses Literals |   Limit Clauses Literals  Lit/Cl |          |
+==============================================================================
+|         0 |  133938   529041 |   44646       0        0     0.0 |  0.000 % |
+|       101 |  133042   525858 |   49111     101    10213   101.1 |  1.674 % |
+|       255 |  133042   525858 |   54022     255    20995    82.3 |  1.674 % |
+|       483 |  133042   525858 |   59424     483    32702    67.7 |  1.674 % |
+|       821 |  133042   525858 |   65366     821    47125    57.4 |  1.674 % |
+|      1328 |  133042   525858 |   71903    1328    68798    51.8 |  1.674 % |
+|      2087 |  133042   525858 |   79093    2087    82070    39.3 |  1.674 % |
+|      3227 |  133042   525858 |   87002    3227   160765    49.8 |  1.674 % |
+|      4935 |  133034   525829 |   95703    4931   300131    60.9 |  1.696 % |
+|      7497 |  133034   525829 |  105273    7492   552885    73.8 |  1.708 % |
+|     11341 |  133003   525710 |  115800   11332   948170    83.7 |  1.708 % |
+|     17110 |  133003   525710 |  127380   17101  1504273    88.0 |  1.708 % |
+|     25759 |  133003   525710 |  140118   25750  2260919    87.8 |  1.708 % |
+|     38735 |  133003   525710 |  154130   38726  3320503    85.7 |  1.708 % |
+|     58196 |  132991   525662 |  169543   58180  5031713    86.5 |  1.730 % |
+|     87391 |  132721   524598 |  186497   87343  6776914    77.6 |  1.730 % |
+==============================================================================
+SATISFIABLE
+Objective value =   0.000000000e+00
+Time used:   21.3 secs
+Memory used: 89.8 Mb (94194131 bytes)
+ 2 18 17 10 4 24 14 22 7 23 16 5 15 3 6 11 25 8 1 9 19 12 26 21 13 20 
+Model has been successfully processed
+rksh@paua:~/Dropbox/glpk/alphacipher$ 
+
+
+and the _result_ is the list of numbers.  This means a=2, b=18, c=17,
+and so on.

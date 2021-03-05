@@ -1,0 +1,24 @@
+cage sum extra
+a    17  F
+b    10	 F
+c    09	 F
+d    30	 F
+f    19	 T
+g    22	 T
+h    22	 T
+i    23	 T
+j    31	 T
+k    13	 F
+l    29	 T
+m    12	 F
+n    24	 T
+o    07	 F
+p    40	 T
+r    17	 F
+s    11	 T
+t    12	 F
+u    12	 F
+v    15	 T
+w    30	 T
+
+

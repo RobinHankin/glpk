@@ -1,0 +1,31 @@
+An example input file is given in 'infile.txt'.
+
+This is an ascii representation of the start grid.
+
+If two cells have an inequality relationship, this is indicated by ">"
+or "<" for horizontally adjacent cells, or "n" or "v" for vertically
+adjacent cells.  "v" implies that the upper cell is greater than the
+lower one, and "n" [which sort of looks like an upsidedown v] means
+that the upper one is greater than the lower one.
+
+Two adjacent cells with no given relationship appear in puzzles as a
+horizontal or vertical line.  This is given in infile.txt as a "|" or
+"-" within nonets, or "I" or "=" to mark the edges of the nonets (and
+indeed the puzzle).
+
+The R file meta_greater.R reads the file infile.txt.  It ignores
+symbols other than "<>nv", others are just pretty things that make it
+easier to verify that the file actually matches the puzzle as printed.
+
+
+
+
+To solve the puzzle, at the commandline type
+
+
+ R CMD batch meta_greater.R   # create 'greater_example.mod'
+
+ glpsol --minisat -m greater_example.mod  # run glpsol and solve.
+
+
+

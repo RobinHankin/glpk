@@ -1,0 +1,43 @@
+/* alphacipher */
+
+var x{i in 1..26, j in 1..26}, binary;
+/* x[i,j]=1 means x[i] = j; x[1] = "A", x[2] = "B" and so on; so
+x[3,4]=1 means "C=4".
+
+s.t. let{i in 1..26, j in 1..26}: sum{i in 1..26} x[i,j] = 1;
+/* each letter must be assigned exactly one number */
+
+s.t. num{i in 1..26, j in 1..26}: sum{j in 1..26} x[i,j] = 1;
+/* each letter must be assigned exactly one number */
+
+/* s.t. ashley: sum{i in (01, 19, 08, 12, 05, 25)} j*x[i,j] = 47
+                        a   s   h   l   e   y 
+
+
+a 01
+b 02
+c 03
+d 04
+e 05
+f 06
+g 07
+h 08
+i 09
+j 10
+k 11
+L 12
+m 13
+n 14
+o 15
+p 16
+q 17
+r 18
+s 19
+t 20
+u 21
+v 22
+w 23
+x 24
+y 25
+z 26
+*/

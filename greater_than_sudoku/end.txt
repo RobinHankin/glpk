@@ -1,0 +1,20 @@
+
+/* there is no need for an objective function here */
+
+solve;
+
+for {i in 1..9}
+{  for {0..0: i = 1 or i = 4 or i = 7}
+      printf " +-------+-------+-------+\n";
+   for {j in 1..9}
+   {  for {0..0: j = 1 or j = 4 or j = 7} printf(" |");
+      printf " %d", sum{k in 1..9} x[i,j,k] * k;
+      for {0..0: j = 9} printf(" |\n");
+   }
+   for {0..0: i = 9}
+      printf " +-------+-------+-------+\n";
+}
+
+end;
+
+

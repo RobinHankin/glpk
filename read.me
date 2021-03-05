@@ -1,0 +1,22 @@
+This directory contains working .mod files for solving different
+optimization (or sometimes satisfiability) problems.
+
+
+These functions use the glpk library, "gnu linear programming kit",
+see https://www.gnu.org/software/glpk/
+
+Install it with
+
+sudo apt install glpk-utils
+
+
+
+Then, taking the cinema/ directory as an example, change to the
+directory, then at the command line type:
+
+
+glpsol -m cinema.mod
+
+This excutes the solver and gives a bunch of output to the standard
+output, which contains the answer to the problem.
+

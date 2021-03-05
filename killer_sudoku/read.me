@@ -1,0 +1,21 @@
+The file metakiller.R reads a bunch of files specified in the first
+few lines.  Running it with "R CMD batch metakiller.R" creates a file
+called something like 'killer_all.mod'.  The '.mod' files are sort of
+human-readable.  But 'make clean' [unimplemented] would get rid of all
+the .mod files.
+
+
+To solve the problem specified by the files read into metakiller, use:
+
+"glpsol --minisat -m killer_all.mod"
+
+[NB1: or whatever the file created by metakiller.R is called].
+
+
+
+
+For the examples used here, it takes about 15 hours to run, or about
+15 seconds if the "-m" flag is used.
+
+The final part of the output of glpsol is saved here as ans.txt, which
+includes a printout of the final solution.

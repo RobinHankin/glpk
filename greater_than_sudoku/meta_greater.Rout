@@ -1,0 +1,135 @@
+
+R version 3.0.0 (2013-04-03) -- "Masked Marvel"
+Copyright (C) 2013 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin10.8.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[Previously saved workspace restored]
+
+> # this creates a file called filename_modfile  which is used as, for example,
+> # "glpsol --minisat -m killer_mindbending.mod".
+> 
+> rm(list=ls())
+> 
+> filename_in <- "infile.txt"
+> filename_setup <- "setup.txt"
+> filename_end   <- "end.txt"
+> filename_modfile      <- "greater_example.mod"
+> 
+> a <- readLines(filename_in)
+> 
+> ## 'a' is a diagram of the cages in the grid:
+> 
+> # do the ">" and "<" first. only the even-numbered lines matter here:
+> 
+> 
+> 
+> 
+> makestring <- function(i1,i2,j1,j2,s,addi){
++ 
++   jj <-  " sum{k in 1..9} k*x["
++   
++   paste(
++     "s.t. ineq_",
++     i1, i2, j1, j2, addi, ": ",
++     jj, i1,",",j1, ",k]", s,"=", jj, i2, ",", j2, ",k];",sep="")
++ }
+> 
+> # makestring() used to create the "s.t." lines in the modfile.  We
+> # need the 'addi' argument because multiple restrictions might use the
+> # same cell as an index.  
+> 
+> 
+> restriction_strings <- c()  
+> ## First the horizontal restictions, then the vertical ones:
+> for(i in seq_len(9)){   # 'i' is row of *puzzle*
++   row_of_a <- 2 + (i-1)*2  # ie rows of 'a', 2,4,6,8...
++   jj <- strsplit(a[row_of_a],' ')[[1]]
++ 
++   ## First the ">" signs:
++   wanted <- jj=='>'
++   if(any(wanted)){
++     for(kk in which(wanted)){
++       i1 <- i
++       i2 <- i
++       j1 <- kk-1
++       j2 <- kk
++       restriction_strings <- c(restriction_strings, makestring(i1,i2,j1,j2,">","A"))
++     }
++   }
++ 
++   ## Now the "<" signs:
++   wanted <- jj=='<'
++   if(any(wanted)){
++     for(kk in which(wanted)){
++       i1 <- i
++       i2 <- i
++       j1 <- kk-1
++       j2 <- kk
++       restriction_strings <- c(restriction_strings, makestring(i1,i2,j1,j2,"<","B"))
++     }
++   }  
++ }
+> 
+> ## Now the vertical ones, "n" and "v":
+> for(i in seq_len(8)){   # 'i' is row of *puzzle*  [note the '8']; top row
++   row_of_a <- 1 + i*2   #ie rows of 'a', 3,5,7,9,... [first line noninformative]
++ 
++   jj <- strsplit(a[row_of_a],' ')[[1]]
++ 
++   ## First the "n" signs:
++   wanted <- jj=='n'
++   if(any(wanted)){
++     for(kk in which(wanted[-1])){   # [-1] used because first col is noninformative
++ 
++       i1 <- i+1  # remember lines are numbered from top to bottom
++       i2 <- i
++       j1 <- kk
++       j2 <- kk
++       ## top R bottom where 'R' is either < or >:
++       restriction_strings <- c(restriction_strings, makestring(i1,i2,j1,j2,">","C"))
++     }
++   }
++ 
++   ## Now the "v" signs:
++   wanted <- jj=='v'
++   if(any(wanted)){
++     for(kk in which(wanted[-1])){
++       i1 <- i+1
++       i2 <- i
++       j1 <- kk
++       j2 <- kk
++       restriction_strings <- c(restriction_strings, makestring(i1,i2,j1,j2,"<","D"))
++     }
++   }  
++ }
+> 
+> 
+> # Now read/write the setup segment:
+> text <- readLines(filename_setup)
+> write(text,file=filename_modfile,append=FALSE)
+> 
+> # Now add the restriction strings as calculated above:
+> for(i in restriction_strings){   write(i,file=filename_modfile,append=TRUE) }
+> 
+> # Now read/write  the end segment:
+> tex2 <- readLines(filename_end)
+> write(tex2,file=filename_modfile,append=TRUE)
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.235   0.029   0.296 

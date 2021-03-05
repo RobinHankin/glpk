@@ -1,0 +1,35 @@
+/* alphacipher */
+
+var x{i in 1..26, j in 1..26}, binary;
+
+/* x[i,j]=1 means x[i] = j; x[1] = "A", x[2] = "B" and so on.
+So "x[3,4]=1" means "C=4".
+*/
+
+s.t. let{j in 1..26}: sum{i in 1..26} x[i,j] = 1;
+/* each letter must be assigned exactly one number */
+
+s.t. num{i in 1..26}: sum{j in 1..26} x[i,j] = 1;
+/* each letter must be assigned exactly one number */
+
+
+
+
+
+/* NB  my first idea was to write lines like this:
+
+s.t. ashley: sum{i in (01, 19, 08, 12, 05, 25), j in 1..26} j*x[i,j] = 47
+                        a   s   h   l   e   y 
+
+
+this is OK but only if there is no repeated letter.  EG "coppelia", is
+no OK because of the repeated "P"  (the repeats do not have to be
+together to cause a problem).  The problem arises because the letters
+of coppelia are not a set.
+
+So I have to do something like
+
+s.t. ashley: sum{j in 1..26} j*x[1,j] + sum{j in 1..26} j*x[19,j] + ... = 47
+
+
+*/
